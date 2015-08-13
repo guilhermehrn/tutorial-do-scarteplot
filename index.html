@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ScatterPlot</title>
+
+<link rel="stylesheet" href="./lib/highlight/styles/default.css">
+<link rel="stylesheet" href="./css/index.css">
+<script type="text/javascript" src="./lib/d3/d3.js"></script>
+<script type="text/javascript" src="./lib/highlight/highlight.pack.js"></script>
+
+<script type="text/javascript" src="./lib/jquery/jquery-2.1.4.js"></script>
+<script>
+	hljs.initHighlightingOnLoad();
+</script>
+
+
+</head>
+<body>
+	<h1>ScattePlot</h1>
+	<p class="textcorpo"> <i><b>Nomes:</b> Guilherme Henrique Rodrigues Nascimento;<br>
+	      Leandro Augusto de Sa Vieira;<br>
+	      Mauri Miguel</i>
+	</p>
+	<br>
+
+	<p class="textcorpo">
+		Primeiramente vamos, criar um simples documento HTML e adicionar as
+		biblioteca do <i>D3 js</i>. Nosso caso iremos usar um <i>Content Delivery Network</i> (CDN) para
+		importar a biblioteca para o nosso projeto. Adicionamos também uma tag
+		<b>&lt;div&gt;</b> com ID igual a gráfico, onde será usado pelo D3
+		para fazer a renderização do gráfico. O código do arquivo HML ficara
+		da seguinte forma:
+	</p>
+
+	<pre>
+	<code class="hljs xml code" id="html1">
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;scatterplot com D3 &lt;/title&gt;
+    &lt;script src=&quot;http://d3js.org/d3.v3.min.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;div id=&quot;grafico&quot;&gt; &lt;/div&gt;
+    &lt;script src = &quot;index.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+	</code>
+	</pre>
+
+	<p class="textcorpo">Foi adicionado ao HMTL o caminho do arquivo
+		javascript com código do scatteplot para que possa ser
+		carregado junto com a página.</p>
+
+	<p class="textcorpo">
+		Agora vamos criar o nosso código em javascript em outro arquivo com
+		extensão js com o nome <i>index.js</i>. Para a nosso scatterplot vamos
+		usar um array de arrays. A matriz primária irá conter um elemento para
+		cada dados "ponto". Cada um desses elementos "Pontos" será mais um
+		array, com apenas dois valores: um para o valor x, e um para y.
+		Começamos definindo o nosso array de arrays:
+	</p>
+	<pre>
+	
+	<code class="hljs javascript" id="js1">
+var dataset = [ [5, 20], [480, 90], [250, 50], [100, 33],
+              [330, 95], [410, 12], [475, 44],
+              [25, 67], [85, 21], [220, 88] ];
+	</code>
+	</pre>
+
+	<p class="textcorpo">Pode-se também utilizar um JSON ou CSV, mas
+		aqui iremos usar um array para simplificar o nosso tutorial. O JSON
+		segue a uma estruturação análoga ao nosso array, e o D3 oferece todo o
+		suporte para carregar um JSON.</p>
+
+	<p class="textcorpo">
+		Então, agora vamos criar o nosso elemento svg da seguinte comando no <i>index.js
+		</i>:
+	</p>
+
+	<pre>
+		<code class="hljs javascript" id="js2">
+var svg = d3.select("#grafico").append("svg").attr("width", w).attr("height", h);
+	</code>
+	</pre>
+
+	<p class="textcorpo">
+		No comando acima estamos dizendo que é para pegar DOM de id igual a <i>gráfico</i>
+		e apendar um objeto do tipo svg com as larguras <b>w</b> e altura <b>h</b>.
+		as variáveis <b>w</b> e <b>h</b> serão definidos com o respectivos
+		tamanhos de 600 e 500 px. Em seguida o comando armazena isso tudo em
+		uma variável chamada svg.
+	</p>
+	<p class="textcorpo">Agora vamos criar os círculos para cada ponto
+		dos dados usando o seguinte comando:</p>
+
+	<pre>
+		<code class="hljs javascript" id="js3">
+svg.selectAll("circle").data(dataset).enter() .append("circle")
+		</code>
+	</pre>
+
+	<p class="textcorpo">Depois disso vamos adicionar a posição do centro de cada circulo
+		(cx e cy) e os seus respectivos raios (r):</p>
+
+	<pre>
+		<code class="hljs javascript" id="js4">
+.attr("cx", function(d){
+	return d[0]; 
+}).attr("cy", function(d) {
+	return d[1]; 
+}).attr("r", 5)
+	</code>
+	</pre>
+
+	<p class="textcorpo">A segui temos o código de todo o index.js e o
+		resultado após carregado a pagina no navegador :</p>
+
+	<pre>
+		<code class="hljs javascript" id="js5">
+		
+var w = 600;
+var h = 500;
+
+var dataset = [
+[5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+[410, 12], [475, 44], [25, 67], [85, 21], [220, 88]];
+
+var svg = d3.select("#grafico")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+
+svg.selectAll("circle")
+   .data(dataset)
+   .enter()
+   .append("circle")
+   .attr("cx", function(d) {
+       return d[0];
+    })
+    .attr("cy", function(d) {
+	   return d[1];
+    })
+    .attr("r", 5);
+	</code>
+	</pre>
+
+	<div class="comofica" id="fjs5"></div>
+	<script type="text/javascript" src="./js/index.js"></script>
+
+	<p class="textcorpo">
+		Observe como temos acesso aos valores de dados e utilizá-los para o <b>cx</b>
+		e <b>cy</b> valores. Ao utilizar <i>function (d)</i>, o D3 entrega o
+		valor dos dados correntes <b>d</b> para a sua função. Neste caso, o
+		valor corrente de dados é uma dos sub-arrays no nosso array maior.
+		Cada dado de <b>d</b> é em si uma matriz de valores (e não apenas um
+		único valor, como 3,14159), você precisa usar a notação de suporte
+		para acessar os seus valores. Assim, em vez de retorno d, dispomos de
+		retorno d [0] e d [1], que retornam do primeiro e segundo valores de
+		da matriz, respectivamente
+	</p>
+
+	<h2>Tamanho dos Círculo</h2>
+
+	<p class="textcorpo">
+		Vamos deixar os círculos para ter tamanhos diferentes, para que seus
+		raios correspondam ao valor y. Em vez de definir todos os valores de <b>r</b>
+		para 5 vamo fazer o seguinte:
+	</p>
+
+	<pre>
+		<code class="hljs javascript" id="js6">
+.attr("r", function(d) { 
+    return Math.sqrt(h - d[1]); 
+});
+	</code>
+	</pre>
+
+	<p class="textcorpo">
+		A função javascript Math.sqrt calcula a raiz quadrada de uma
+		número. Isso ilustra como usar d, juntamente com suporte de notação,
+		para fazer referência a valores de dados corrente e definir <b>r</b>.
+		Com isso temos o seguinte resultado: 
+	</p>
+
+
+	<div class="comofica" id="fjs6"></div>
+	<script type="text/javascript" src="./js/fjs6.js"></script>
+
+	<h2>Rótulos</h2>
+	<p class="textcorpo">Agora vamos adicionar rótulos ao nosso
+		scatterplot, adicionando o seguinte código:</p>
+
+	<pre>
+		<code class="hljs javascript" id="js7">
+svg.selectAll("text") 
+   .data(dataset) 
+   .enter() 
+   .append("text")
+</code>
+	</pre>
+
+	<p class="textcorpo">O comando acima adiciona um elemento texto a
+		para todos os elementos. Em seguida, acrescentamos um novo elemento de
+		texto para cada ponto de dados.</p>
+
+	<p class="textcorpo">
+		Em seguida, usamos o método <i>text()</i> para especificar cada um
+		desse elementos textos:
+	</p>
+
+	<pre>
+		<code class="hljs javascript" id="js8">
+.text(function(d) { 
+return d[0] + "," + d[1]; 
+})
+	</code>
+	</pre>
+	<p class="textcorpo">
+		Mais uma vez, estamos usando
+		<d>function (d)</d>
+		para acessar cada ponto dos dados. Então, o que esse trecho de código
+		está realmente fazendo é: Obter os valores de <b>d[0]</b> e <b>d[1]</b>
+		e concatenar em conjunto com uma vírgula no meio. O resultado final
+		deve ser algo como “5,20” ou “25,67”.
+	</p>
+
+	<p class="textcorpo">
+		Agora vamos especificar onde o texto deve ser colocado com os valores
+		<b>x</b> e <b>y</b> usando <b>d[0]</b> e <b>d[1]</b>, os mesmos
+		valores utilizado para designar as posições dos círculos do nosso
+		scatterplot:
+	</p>
+
+	<pre>
+		<code class="hljs javascript" id="js9">
+.attr("x", function(d) { 
+return d[0]; 
+}) 
+.attr("y", function(d) { 
+return d[1]; 
+})
+	</code>
+	</pre>
+
+	<p class="textcorpo">Em seguida adicionamos os atributos do texto:
+	</p>
+
+	<pre>
+		<code class="hljs javascript" id="js10">
+.attr("font-family", "sans-serif") 
+.attr("font-size", "11px") 
+.attr("fill", "red");
+</code>
+	</pre>
+
+	<p class="textcorpo">Todo o código fica desse jeito:</p>
+
+	<pre>
+		<code class="hljs javascript" id="js11">
+var w = 600;
+var h = 500;
+
+var dataset = [
+[5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+[410, 12], [475, 44], [25, 67], [85, 21], [220, 88]];
+
+var svg = d3.select("#grafico")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+svg.selectAll("circle")
+   .data(dataset)
+   .enter()
+   .append("circle")
+   .attr("cx", function(d) {
+	   return d[0];
+   })
+   .attr("cy", function(d) {
+	   return d[1];
+   })
+   .attr("r", function(d) {
+	   return Math.sqrt(h - d[1]);
+   });
+
+svg.selectAll("text")
+   .data(dataset)
+   .enter()
+   .append("text")
+   .text(function(d) {
+	   return d[0] + "," + d[1];
+   }).attr("x", function(d) {
+	   return d[0];
+   })
+   .attr("y", function(d) {
+	   return d[1];
+   })
+   .attr("font-family", "sans-serif")
+   .attr("font-size", "11px")
+   .attr("fill", "red");
+
+</code>
+	</pre>
+
+	<div class="comofica" id="fjs11"></div>
+	<script type="text/javascript" src="./js/fjs11.js"></script>
+
+	<h2>Escala no Scartterplot</h2>
+
+	<p class="textcorpo">
+		Vamos modificar o nosso código de tal forma que apliquemos ao nosso
+		scartterplot uma escala de modo que ele possa aceitar novas entradas
+		de dados, ou seja, uma escala dinâmica. Para isso vamos usar as
+		funções <i>D3.min e D3.max</i>.
+	</p>
+	<p class="textcorpo">
+		Por exemplo, este percorre através de cada um dos valores de <b>x</b>
+		em nossas matrizes e devolve o valor maior:
+	</p>
+
+	<pre>
+		<code>
+d3.max(dataset, function(d) { 
+return d[0]; 
+})
+	</code>
+	</pre>
+
+	<p class="textcorpo">
+		Usando as funções <i>min</i> e <i>max</i> vamos cria nossa escala
+		dinâmica para o eixo <b>x</b> do nosso escatterplot:
+	</p>
+	<pre>
+		<code class="hljs javascript" id="js12">
+var scalax = d3.scale.linear() //escala linear
+               .domain([0, d3.max(dataset, function(d) {  //dominio
+               		return d[0]; })]) 
+               .range([0, w]); //intervalo
+
+		</code>
+	</pre>
+
+	<p class="textcorpo">Notem que tanto o domínio e intervalo são
+		especificados como matrizes de dois valores. E estou usando uma escala
+		linear. A escala no eixo y fica com o código análogo:</p>
+
+	<pre>
+		<code class="hljs javascript" id="js13">
+var scalay = d3.scale.linear() 
+               .domain([0, d3.max(dataset, function(d) { return d[1]; })]) 
+               .range([0, h]); //intervalo de 0 a até o final da altura
+	
+	</code>
+	</pre>
+
+	<p class="textcorpo">
+		Agora modificamos as funções que calculam <b>cx</b> e <b>cy</b> para as
+		duas funções que definidas a cima scalax e scaley. Os códigos ficarão
+		assim:
+	</p>
+	<pre>
+		<code class="hljs javascript" id="js14">
+.attr("cy", function(d) { 
+    return scalax(d[1]); 
+})
+.attr("cx", function(d) { 
+    return scalax(d[0]); 
+})
+</code>
+	</pre>
+
+	<p class="textcorpo">
+		Fazemos a mesma coisa para as posições <b>x</b> e <b>y</b> dos
+		rótulos:
+	</p>
+	<pre>
+		<code class="hljs javascript" id="js15">
+.attr("x", function (d){return scalax(d[0]);}) 
+.attr("y",function (d){return scalay(d[1]);})
+</code>
+	</pre>
+
+	<p class="textcorpo">O código todo e a imagem resultado são mostrados a seguir:</p>
+
+	<pre>
+		<code class="hljs javascript" id="js16">
+
+var w = 600;
+var h = 500;
+var pad = 60;
+
+var dataset = [
+[5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+[410, 12], [475, 44], [25, 67], [85, 21], [220, 88]];
+
+var scalax= d3.scale.linear()
+              .domain([0,d3.max(dataset,function(d){
+                  return d[0];})])
+              .range([0,w]);
+
+var scalay = d3.scale.linear()
+               .domain([0,d3.max(dataset,function(d){
+                  return d[1];})])
+               .range([0,h]);
+
+var svg = d3.select("#grafico")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+
+svg.selectAll("circle")
+   .data(dataset)
+   .enter()
+   .append("circle")
+   .attr("cx", function(d) {
+	return scalax(d[0]);
+})
+.attr("cy", function(d) {
+	return scalay(d[1]);
+})
+.attr("r", function(d) {
+	return Math.sqrt(h - d[1]);
+});
+
+svg.selectAll("text")
+   .data(dataset)
+   .enter()
+   .append("text")
+   .text(function(d) {
+	   return d[0] + "," + d[1];
+   })
+   .attr("x", function (d){return scalax(d[0]);})
+   .attr("y",function (d){return scalay(d[1]);})
+   .attr("font-family", "sans-serif")
+   .attr("font-size", "11px")
+   .attr("fill", "#8A9B0F");
+
+</code>
+	</pre>
+
+	<div class="comofica" id="fjs16"></div>
+	<script type="text/javascript" src="./js/fjs16.js"></script>
+
+	<p class="textcorpo">
+		Você pode ter notado que os valores <b>y</b> menores estão no topo do
+		grafico, e quanto maior <b>y</b> os valores são em direção para baixo.
+		Agora que estamos usando escalas do D3, é super fácil de reverter para
+		que valores maiores ficassem mais ao topo, como seria de esperar. É
+		apenas uma questão de mudar o intervalo de saída de <i>scalay</i> de <i>.range([0,
+			h])</i> para <i>.range([h, 0])</i>.
+	</p>
+
+
+	<p class="textcorpo">Vamos introduzir uma variável padding, para
+		fazer com que os elementos não fiquem cortados:</p>
+	<pre>
+		<code class="hljs javascript" id="js17">
+	var padding = 20;
+	</code>
+	</pre>
+
+	<p class="textcorpo">
+		Então nós vamos incorporar a quantidade de <i>padding</i> quando
+		definir o intervalo das duas escalas. O intervalo para scalax era ([0,
+		w]), e o intervalo para scalay era ([h, 0]). Mas agora os intervalos
+		de scalax e scalay respectivamente são:
+	</p>
+	<pre>
+		<code class="hljs javascript" id="js18">
+.range([padding, w - padding]);
+
+	</code>
+	</pre>
+
+	<pre>
+		<code class="hljs javascript" id="js19">
+.range([h - padding, padding]);
+
+	</code>
+	</pre>
+
+
+	<div class="comofica" id="fjs19"></div>
+	<script type="text/javascript" src="./js/fjs19.js"></script>
+
+	<p class="textcorpo">Agora vamos fazer uma escala para o raio, de
+		forma analoga ao feito para os eixo:</p>
+	<pre>
+		<code>
+var scalar = d3.scale.linear() 
+               .domain([0, d3.max(dataset, function(d) { return d[1]; })]) 
+               .range([2, 5]);
+      </code>
+	</pre>
+
+	<p class="textcorpo">
+		E mudar a função de <b>r</b> para:
+
+	</p>
+
+	<pre>
+		<code class="hljs javascript" id="js17">
+.attr("r", function (d) {
+    return scalar(d[1]);
+});
+	</code>
+	</pre>
+	<p class="textcorpo">A seguir temos todo o código e o resultado até
+		o momento:</p>
+	<pre>
+	<code class="hljs javascript" id="js20">
+var w = 600;
+var h = 500;
+var padding = 60;
+
+var dataset = [
+[5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+[410, 12], [475, 44], [25, 67], [85, 21], [220, 88]];
+var scalax= d3.scale.linear()
+              .domain([0,d3.max(dataset,function(d){
+                    return d[0];})])
+              .range([padding,w - padding * 2]);
+
+var scalay = d3.scale.linear()
+               .domain([0,d3.max(dataset,function(d){
+                  return d[1];})])
+               .range([h-padding,padding]);
+
+var scalar = d3.scale.linear() 
+               .domain([0, d3.max(dataset, function(d) { return d[1]; })]) 
+               .range([2, 5]);
+
+var svg = d3.select("#fjs19")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+
+svg.selectAll("circle")
+   .data(dataset)
+   .enter()
+   .append("circle")
+   .attr("cx", function(d) {
+       return scalax(d[0]);
+   })
+   .attr("cy", function(d) {
+       return scalay(d[1]);
+   })
+   .attr("r", function (d) {
+       return scalar(d[1]);
+   });
+
+svg.selectAll("text")
+   .data(dataset)
+   .enter()
+   .append("text")
+   .text(function(d) {
+	return d[0] + "," + d[1];
+   })
+   .attr("x", function (d){return scalax(d[0]);})
+   .attr("y",function (d){return scalay(d[1]);})
+   .attr("font-family", "sans-serif")
+   .attr("font-size", "11px")
+   .attr("fill", "#8A9B0F");
+	</code>
+	</pre>
+
+	<div class="comofica" id="fjs20"></div>
+	<script type="text/javascript" src="./js/fjs20.js"></script>
+
+	<h2>
+		Introduzindo eixos <i>x</i> e <i>y</i>
+	</h2>
+
+	<p class="textcorpo">Para criar um eixo usamos a seguinte função:</p>
+
+
+	<pre>
+		<code class="hljs javascript" id="js21">
+var axeX = d3.svg.axis();
+	</code>
+	</pre>
+
+	<p class="textcorpo">Cada eixo também precisa receber a escala que
+		é para operar. Aqui nós vamos passar scalax:</p>
+
+	<pre>
+		<code class="hljs javascript" id="js22">
+axeX.scale(scalax);
+	</code>
+	</pre>
+
+	<p class="textcorpo">Nós também podemos especificar onde os rótulos
+		devem aparecer em relação ao próprio eixo. o padrão é inferior, ou
+		seja, os rótulos aparece abaixo da linha de eixo. Possíveis
+		orientações para eixos horizontais são topo para inferior. Para eixos
+		verticais, use a esquerda para direita (lembrando que o a coodenada
+		(0,0) fica no canto superior esquerdo).</p>
+
+	<pre>
+		<code class="hljs javascript" id="js23">
+axeX.orient("bottom");
+	</code>
+	</pre>
+
+	<p class="textcorpo">Isso tudo fica assim:</p>
+
+	<pre>
+		<code class="hljs javascript" id="js24">
+axeX = d3.svg.axis()
+         .scale(scalax)
+         .orient("bottom")
+         .ticks(5);
+	</code>
+	</pre>
+
+	<p class="textcorpo">De forma análoga fazemos para o eixo y :</p>
+
+	<pre>
+		<code class="hljs javascript" id="js25">
+var axeY = d3.svg.axis()
+             .scale(scalay) 
+             .orient("left") 
+             .ticks(5);
+	</code>
+	</pre>
+
+	<p class="textcorpo">
+		Para definitivamente anexar os eixo ao <b>svg</b> de forma correta
+		usamos os seguintes comandos:
+	</p>
+
+	<p class="textcorpo"></p>
+	<pre>
+		<code class="hljs javascript" id="js26">
+svg.append("g").attr("class", "axis")
+   .attr("transform", "translate(0,"+(h - pad)+")")
+   .call(axeX);
+    
+svg.append("g").attr("class", "axis")
+   .attr("transform","translate(" + pad + ",0)")
+   .call(axey);
+	</code>
+	</pre>
+
+	<p class="textcorpo">
+		Onde que ao adicionar o atributo <i>transform</i> estamos posicionando
+		os eixos no local certo. Pois sem isso os eixo ficariam invetidos
+		comencado do canto superior esquerdo da tela. Adicionamos também os
+		nomes dos eixos, o codigo final pode ser visto a seguir: 
+	</p>
+
+	<pre>
+		<code class="hljs javascript" id="js27">
+
+var dataset = [ [5, 20], [480, 90], [250, 50], [100, 33], [330, 95], 
+	[410, 12], [475, 44], [25, 67], [85, 21], [220, 88], [600, 150]]; 
+
+var w = 600; 
+var h = 500; 
+var padding = 60; 
+
+var scalax= d3.scale.linear() 
+              .domain([0,d3.max(dataset,function(d){ 
+                    return d[0];})]) 
+              .range([padding,w - padding * 2]); 
+
+var scalay = d3.scale.linear() 
+               .domain([0,d3.max(dataset,function(d){ 
+                     return d[1];})]) 
+               .range([h-pad,pad]); 
+
+var scalar = d3.scale.linear() 
+               .domain([0, d3.max(dataset, function(d) { return d[1]; })]) 
+               .range([2, 5]); 
+               
+var axeX = d3.svg.axis().scale(scalax)
+             .orient("bottom").ticks(5); 
+
+var axeY = d3.svg.axis() 
+             .scale(scalay) 
+             .orient("left") 
+             .ticks(5); 
+
+
+var svg = d3.select("#fjs27") 
+            .append("svg") 
+            .attr("width", w) 
+            .attr("height", h); 
+
+svg.selectAll("circle") 
+   .data(dataset) 
+   .enter() 
+   .append("circle") 
+   .attr("cx", function (d){return scalax(d[0]);}) 
+   .attr("cy",function (d){return scalay(d[1]);}) 
+   .attr("r", function (d) {return scalar(d[1]);} ); 
+
+svg.selectAll("text") 
+   .data(dataset) 
+   .enter() 
+   .append("text").text(function (d){ 
+    	return d[0] + " , " + d [1]; 
+   }) 
+   .attr("x", function (d){return scalax(d[0]);}) 
+   .attr("y",function (d){return scalay(d[1]);}) 
+   .attr("fill", "#8A9B0F") 
+   .attr("font-seze", "11px"); 
+
+svg.append("g").attr("class", "axis")
+   .attr("transform", "translate(0,"+(h - padding)+")")
+   .call(axeX)
+   .append("text") // aqui estamos adicionando os nomes dos eixos
+   .attr("class", "label")
+   .attr("transform", "rotate(-90)") //aqui estamos rotacionando os o nome do eixo y
+   .attr("y", 6) //posição y do nome
+   .attr("x",221) // posição x  do nome
+   .attr("dy", ".71em") //distância do nome para o eixo y
+   .style("text-anchor", "end")
+   .text("Eixo Y");
+    
+ svg.append("g").attr("class", "axis")
+    .attr("transform","translate(" + padding + ",0)")
+    .call(axeY)
+    .append("text") // aqui estamos adicionando os nomes dos eixos
+    .attr("class", "label")
+    .attr("x", 250) 
+    .attr("y", h-20)
+    .style("text-anchor", "end")
+    .text("Eixo X");
+</code>
+	</pre>
+
+	<p class="textcorpo">Podemos ainda introduzir o seguinte CSS para melhorar a
+		aparencia dos eixos:</p>
+	<pre>
+		<code class="hljs css">
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+</code>
+	</pre>
+
+
+
+	<p class="textcorpo">E FINALMENTE TEMOS O NOSSO SCATTERPLOT:</p>
+
+	<div class="comofica" id="fjs27"></div>
+	<script type="text/javascript" src="./js/fjs27.js"></script>
+
+<h2>Referências</h2>
+
+<p class="textcorpo">Scott Murray.  <i>An Introduction to Designing with D3</i>. O'Reilly Media: 2013 </p>
+<p class="textcorpo">Swizec Teller. <i>Data Visualization with d3.js</i>. Packt Publishing: 2013 </p>
+<p class="textcorpo">D3 Scatterplot Example. Disponivel em: http://bl.ocks.org/weiglemc/6185069 Acessado em: 28 julho de 2015</p>
+
+
+</body>
+</html>

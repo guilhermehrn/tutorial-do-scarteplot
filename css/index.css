@@ -1,0 +1,78 @@
+@CHARSET "UTF-8";
+
+#fjs5 {
+	height: 125px;
+	width: 600px;
+}
+
+#fjs6 {
+	height: 125px;
+	width:600px;
+}
+
+#fjs11 {
+	height: 125px;
+	width: 600px;
+}
+
+#fjs16{
+	width: 600px;
+}
+#fjs19{
+	width: 600px;
+}
+
+#fjs20{
+	width: 600px;
+}
+
+#fjs27{
+	width: 600px;
+}
+
+
+
+
+.axis path, .axis line {
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+
+.axis text {
+	font-family: sans-serif;
+	font-size: 11px;
+}
+
+#html1 {
+	
+}
+
+.hljs {
+	left: 100px;
+	position: relative;
+	width: 600px;
+}
+
+.comofica {
+	border-color: #0b486b;
+	border-style: solid;
+	border-width: 2px;
+	left: 100px;
+	position: relative;
+}
+
+h1{
+	text-align: center;
+}
+
+h2{
+	left: 30px;
+    position: relative;
+	
+}
+.textcorpo{
+	left: 30px;
+    position: relative;
+    width: 90%;
+}
